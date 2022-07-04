@@ -18,9 +18,9 @@
 
 package com.ncst.training.ride.testing;
 
+import com.ncst.training.common.utils.MissingSolutionException;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.KeyedProcessFunction;
-import org.apache.flink.training.exercises.common.utils.MissingSolutionException;
 import org.apache.flink.util.Collector;
 
 /**
