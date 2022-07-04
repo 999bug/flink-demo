@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package spendreport;
+package com.ncst.spendreport.fraud;
 
 import org.apache.flink.streaming.api.functions.KeyedProcessFunction;
 import org.apache.flink.util.Collector;
@@ -38,11 +38,7 @@ public class FraudDetector extends KeyedProcessFunction<Long, Transaction, Alert
 	private static final long ONE_MINUTE = 60 * 1000;
 
 	@Override
-	public void processElement(
-			Transaction transaction,
-			Context context,
-			Collector<Alert> collector) throws Exception {
-
+	public void processElement(Transaction transaction, Context context, Collector<Alert> collector) {
 		Alert alert = new Alert();
 		alert.setId(transaction.getAccountId());
 		collector.collect(alert);

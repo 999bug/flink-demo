@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package spendreport;
+package com.ncst.spendreport.fraud;
 
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.configuration.RestOptions;
@@ -31,28 +31,29 @@ import org.apache.flink.walkthrough.common.source.TransactionSource;
  * Skeleton code for the datastream walkthrough
  */
 public class FraudDetectionJob {
-	public static void main(String[] args) throws Exception {
-		// 生产环境
+
+    public static void main(String[] args) throws Exception {
+        // 生产环境
 //		StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        // 开发环境 web-ui
+        Configuration configuration = new Configuration();
+        configuration.setString(RestOptions.BIND_PORT, "10086");
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(configuration);
 
-		// 开发环境
-		Configuration configuration = new Configuration();
-		configuration.setString(RestOptions.BIND_PORT,"10086");
-		StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(configuration);
+        // 创建数据源
+        DataStream<Transaction> transactions = env
+                .addSource(new TransactionSource())
+                .name("transactions");
 
-		DataStream<Transaction> transactions = env
-			.addSource(new TransactionSource())
-			.name("transactions");
+        DataStream<Alert> alerts = transactions
+                // 保证同一个task被同一个并发task处理
+                .keyBy(Transaction::getAccountId)
+                .process(new FraudDetector1_2())
+                .name("fraud-detector");
 
-		DataStream<Alert> alerts = transactions
-			.keyBy(Transaction::getAccountId)
-			.process(new FraudDetector())
-			.name("fraud-detector");
+        // 输出
+        alerts.addSink(new AlertSink()).name("send-alerts");
 
-		alerts
-			.addSink(new AlertSink())
-			.name("send-alerts");
-
-		env.execute("Fraud Detection");
-	}
+        env.execute("Fraud Detection");
+    }
 }
