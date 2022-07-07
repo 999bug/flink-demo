@@ -52,9 +52,7 @@ public class RideCleansingSolution {
      * @throws Exception which occurs during job execution.
      */
     public static void main(String[] args) throws Exception {
-        RideCleansingSolution job =
-                new RideCleansingSolution(new TaxiRideGenerator(), new PrintSinkFunction<>());
-
+        RideCleansingSolution job = new RideCleansingSolution(new TaxiRideGenerator(), new PrintSinkFunction<>());
         job.execute();
     }
 
@@ -65,7 +63,6 @@ public class RideCleansingSolution {
      * @throws Exception which occurs during job execution.
      */
     public JobExecutionResult execute() throws Exception {
-
         // set up streaming execution environment
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 

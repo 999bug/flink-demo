@@ -140,11 +140,9 @@ public class RidesAndFaresSolution {
 
         @Override
         public void open(Configuration config) {
-
-            rideState = getRuntimeContext()
-                            .getState(new ValueStateDescriptor<>("saved ride", TaxiRide.class));
-            fareState = getRuntimeContext()
-                            .getState(new ValueStateDescriptor<>("saved fare", TaxiFare.class));
+            // 初始化
+            rideState = getRuntimeContext().getState(new ValueStateDescriptor<>("saved ride", TaxiRide.class));
+            fareState = getRuntimeContext().getState(new ValueStateDescriptor<>("saved fare", TaxiFare.class));
         }
 
         @Override

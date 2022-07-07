@@ -89,18 +89,18 @@ public class HourlyTipsSolution {
                 fares.keyBy((TaxiFare fare) -> fare.driverId)
                         .window(TumblingEventTimeWindows.of(Time.hours(1)))
                         // 匿名内部类方式
-                        .process(new ProcessWindowFunction<TaxiFare, Tuple3<Long, Long, Float>, Long, TimeWindow>() {
-                            @Override
-                            public void process(Long aLong, Context context, Iterable<TaxiFare> elements, Collector<Tuple3<Long, Long, Float>> out) {
-                                float sumOfTips = 0F;
-                                for (TaxiFare f : elements) {
-                                    sumOfTips += f.tip;
-                                }
-                                out.collect(Tuple3.of(context.window().getEnd(), aLong, sumOfTips));
-                            }
-                        })
+//                        .process(new ProcessWindowFunction<TaxiFare, Tuple3<Long, Long, Float>, Long, TimeWindow>() {
+//                            @Override
+//                            public void process(Long aLong, Context context, Iterable<TaxiFare> elements, Collector<Tuple3<Long, Long, Float>> out) {
+//                                float sumOfTips = 0F;
+//                                for (TaxiFare f : elements) {
+//                                    sumOfTips += f.tip;
+//                                }
+//                                out.collect(Tuple3.of(context.window().getEnd(), aLong, sumOfTips));
+//                            }
+//                        })
                         // 内部类方式
-                        // .process(new AddTips())
+                         .process(new AddTips())
                         .name("compute after");
 
         // find the driver with the highest sum of tips for each hour
